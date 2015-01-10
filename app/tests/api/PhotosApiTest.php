@@ -2,6 +2,8 @@
 
 class PhotosApiTest extends ApiTester {
 
+	use TestPhotosTrait;
+
 	protected $usesDb = true;
 
 	protected $testPhoto = [
@@ -63,13 +65,6 @@ class PhotosApiTest extends ApiTester {
 		$response = $this->sendPost('photos/' . $id, $newData);
 		$this->assertSuccessResponse($response, 'Bad response when updating a photo');
 		$this->assertEquals('newly_added', $response->getData()->data->marker_id, 'Marker ID was not updated properly!');
-	}
-
-	protected function createTestPhoto(array $attributes, $filename = 'test_photo.jpg')
-	{
-		$uploadedPhoto = new Symfony\Component\HttpFoundation\File\UploadedFile(__DIR__ . '/../data/' . $filename, $filename);
-
-		return $this->sendPost('photos', $attributes, ['photo' => $uploadedPhoto]);
 	}
 
 }

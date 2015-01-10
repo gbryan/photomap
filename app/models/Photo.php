@@ -36,6 +36,11 @@ class Photo extends BaseModel {
 		'photo'		=> 'image|max:5000'
 	];
 
+	public function marker()
+	{
+		return $this->belongsTo('Marker');
+	}
+
 	public static function baseDirectory()
 	{
 		return storage_path() . '/photos';

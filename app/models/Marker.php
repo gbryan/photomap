@@ -20,4 +20,9 @@ class Marker extends BaseModel {
 		'tags'			=> 'array',
 		'images'		=> 'array'
 	];
+
+	public function photos()
+	{
+		return $this->hasMany('Photo');
+	}
 }

@@ -52,7 +52,14 @@ class MarkersController extends \ApiController {
 	{
 		$marker = Marker::findOrFail($id);
 
-		return $this->successResponse($marker);
+		$markerArray = $marker->toArray();
+
+		if (Input::get('include_photos', false))
+		{
+			$markerArray = array_merge($markerArray, ['photos' => $marker->photos()->lists('_id')]);
+		}
+
+		return $this->successResponse($markerArray);
 	}
 
 
