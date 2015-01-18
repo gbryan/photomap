@@ -16,11 +16,6 @@ Route::get('/', function()
 	return View::make('hello');
 });
 
-Route::get('btest', function()
-{
-
-});
-
 Route::group(['prefix' => 'api/v1.0', 'before' => 'api_auth'], function()
 {
 	Route::resource('markers', 'MarkersController');

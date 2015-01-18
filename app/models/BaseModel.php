@@ -2,7 +2,6 @@
 
 class BaseModel extends ValidatingModel {
 
-
 	/**
 	 * Returns an array of only the specified fields. If a specified field does not exist on the model, it 
 	 * will silently not be included in the returned array.
@@ -33,11 +32,34 @@ class BaseModel extends ValidatingModel {
 	 */
 	public function apiFields()
 	{
-		if (!property_exists($this, 'apiFields'))
+		if (!property_exists($this, 'apiFields') || empty($this->apiFields))
 		{
 			return $this->toArray();
 		}
 
 		return $this->onlyFields($this->apiFields);
 	}
+
+	/**
+	 * Create a new Eloquent Collection instance.
+	 *
+	 * @param  array  $models
+	 * @return \PhotoMap\Extensions\Collection
+	 */
+	public function newCollection(array $models = array())
+	{
+		return new PhotoMap\Extensions\Collection($models);
+	}
+
+	/**
+	 * Create a new Eloquent query builder for the model.
+	 *
+	 * @param  \Illuminate\Database\Query\Builder $query
+	 * @return \PhotoMap\Extensions\EloquentBuilder|static
+	 */
+	public function newEloquentBuilder($query)
+	{
+		return new PhotoMap\Extensions\EloquentBuilder($query);
+	}
+
 }

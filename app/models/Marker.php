@@ -2,6 +2,8 @@
 
 class Marker extends BaseModel {
 
+	protected $apiFields = [];
+
 	public $singularName = 'marker';
 
 	public $pluralName = 'markers';
@@ -24,5 +26,16 @@ class Marker extends BaseModel {
 	public function photos()
 	{
 		return $this->hasMany('Photo');
+	}
+
+	public function scopeWithinBox($query, array $coordinates)
+	{
+		return $query->whereRaw([
+			'loc' => [
+				'$geoWithin' => [
+					'$box' => $coordinates
+				]
+			]
+		]);
 	}
 }

@@ -2,6 +2,8 @@
 
 class ApiAuthTest extends ApiTester {
 	
+	use TestMarkersTrait;
+	
 	public function test_creating_a_marker_without_logging_in_returns_unauthorized()
 	{
 		$data = $this->testMarker;

@@ -4,16 +4,6 @@ class BaseTester extends TestCase {
 	
 	protected $usesDb = false;
 
-	protected $testMarker = [
-		'name'	=> 'City Hall',
-		'loc'	=> [
-			'type'			=> 'Point',
-			'coordinates'	=> [-122.273257, 37.869230]
-		],
-		'description'	=> 'My fancy description',
-		'tags'	=> ['building', 'government']
-	];
-
 	public function setUp()
 	{
 		parent::setUp();

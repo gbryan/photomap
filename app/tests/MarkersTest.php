@@ -2,6 +2,8 @@
 
 class MarkersTest extends BaseTester {
 
+	use TestMarkersTrait;
+
 	protected $usesDb = true;
 
 	public function test_create_a_marker_and_ensure_output_matches_input()

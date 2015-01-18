@@ -47,7 +47,7 @@ class PhotosApiTest extends ApiTester {
 		$this->assertResponseStatus(200, 'Response was not 200 when trying to view photo');
 	}
 
-	public function test_requesting_an_image_on_disk_with_bogus_id_fails()
+	public function test_requesting_an_image_on_disk_with_bogus_id_fails_with_exception()
 	{
 		$this->setExpectedException('Illuminate\Database\Eloquent\ModelNotFoundException');
 		$response = $this->sendGet('files/bogus');
