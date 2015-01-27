@@ -12,9 +12,6 @@ class MarkersController extends \ApiController {
 	 */
 	public function index()
 	{
-		// TO-DO: validation
-		// requires operator, shape, coordinates
-
 		$input = new LaravelInput(Input::all());
 
 		$validation = Validator::make($input->all(), [
@@ -58,6 +55,11 @@ class MarkersController extends \ApiController {
 		$coordinates = json_decode($input->get('coordinates'));
 
 		$results = Marker::withinBox($coordinates)->paginate($input->get('limit', Paginator::MAX_PER_PAGE));
+
+		if ('geojson' == $input->get('format', 'default'))
+		{
+			return $this->successResponse($results->toGeoJson(), 'Markers within box ' . json_encode($coordinates));
+		}
 
 		return $this->successResponse($results->apiFields(), 'Markers within box ' . json_encode($coordinates));
 	}
@@ -109,14 +111,32 @@ class MarkersController extends \ApiController {
 	{
 		$marker = Marker::findOrFail($id);
 
-		$markerArray = $marker->toArray();
-
-		if (Input::get('include_photos', false))
+		if ('geojson' == Input::get('format', 'default'))
 		{
-			$markerArray = array_merge($markerArray, ['photos' => $marker->photos()->lists('_id')]);
+			return $this->geoJsonIndividualPhoto($marker);
 		}
 
-		return $this->successResponse($markerArray);
+		return $this->defaultFormatIndividualPhoto($marker);
+	}
+
+	private function defaultFormatIndividualPhoto(Marker $marker)
+	{
+		if (Input::get('include_photos', false))
+		{
+			return $this->successResponse($marker->withPhotos()->apiFields());
+		}
+
+		return $this->successResponse($marker->withoutPhotos()->apiFields());
+	}
+
+	private function geoJsonIndividualPhoto(Marker $marker)
+	{
+		if (Input::get('include_photos', false))
+		{
+			return $this->successResponse($marker->withPhotos()->toGeoJson());
+		}
+
+		return $this->successResponse($marker->withoutPhotos()->toGeoJson());
 	}
 
 

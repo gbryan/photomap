@@ -43,10 +43,9 @@ class BaseTester extends TestCase {
 	{
 		$users = [
 			[
-				'username'		=> 'admin',
+				'email'			=> 'bogus@bogus.com',
 				'password'		=> Hash::make('password'),
-				'first_name'	=> 'Administrator',
-				'email'			=> 'bogus@bogus.com'
+				'first_name'	=> 'Administrator'
 			]
 		];
 

@@ -15,15 +15,15 @@ class MarkersApiTest extends ApiTester {
 		$this->assertEquals('success', $responseData->status);
 	}
 
-	public function test_creating_marker_without_loc_returns_error_message()
+	public function test_creating_marker_without_geometry_returns_error_message()
 	{
 		$data = $this->testMarker;
-		unset($data['loc']);
+		unset($data['geometry']);
 
 		$response = $this->sendPost('markers', $data);
 		$this->assertResponseStatus(400);
 		$responseData = $response->getData();
-		$this->assertContains('The loc field is required.', $responseData->errors->loc);
+		$this->assertContains('The geometry field is required.', $responseData->errors->geometry);
 	}
 
 	public function test_requesting_a_single_marker_returns_success_message()
@@ -36,7 +36,7 @@ class MarkersApiTest extends ApiTester {
 		$this->assertSuccessResponse($response, 'Invalid response when getting individual marker');
 	}
 
-	public function test_requesting_marker_with_photos_returns_array_of_photo_ids_with_marker()
+	public function test_requesting_marker_with_photos_returns_array_of_photos_with_marker()
 	{
 		// Create a test marker.
 		$response = $this->sendPost('markers', $this->testMarker);
@@ -60,8 +60,12 @@ class MarkersApiTest extends ApiTester {
 		$response = $this->sendGet('markers/' . $markerId, ['include_photos' => true]);
 		$this->assertResponseStatus(200);
 		$this->assertObjectHasAttribute('photos', $response->getData()->data, 'No "photos" property on data object');
-		$actualPhotoIds = $response->getData()->data->photos;
-		$this->assertEquals($photoIds, $actualPhotoIds, 'Marker does not show the expected photo IDs.');
+		$actualPhotos = $response->getData()->data->photos;
+
+		foreach ($actualPhotos as $actualPhoto)
+		{
+			$this->assertContains($actualPhoto->_id, $photoIds, 'Marker does not show the expected photo IDs.');
+		}
 	}
 
 	public function test_requesting_markers_with_bounding_box()
@@ -72,16 +76,17 @@ class MarkersApiTest extends ApiTester {
 		
 		$inData2 = $this->testMarker;
 		$inData2['name'] = 'In bounds 2';
-		$inData2['loc']['coordinates'] = [-122.273258, 37.869231];
+		$inData2['geometry']['coordinates'] = [-122.273258, 37.869231];
 		$inBounds2 = Marker::create($inData2);
 
 		$outData = $this->testMarker;
 		$outData['name'] = 'Out of bounds';
-		$outData['loc']['coordinates'] = [-124.273258, 39.869231];
+		$outData['geometry']['coordinates'] = [-124.273258, 39.869231];
 		$outOfBounds = Marker::create($outData);
 
-		$response = $this->sendGet('markers', ['operator' => 'within', 'shape' => 'box', 'coordinates' => json_encode($this->boundingBoxCoordinates)]);
+		$response = $this->sendGet('markers', ['format' => 'default', 'operator' => 'within', 'shape' => 'box', 'coordinates' => json_encode($this->boundingBoxCoordinates)]);
 		$this->assertResponseStatus(200);
+
 		$markers = $response->getData()->data->data;
 		$this->assertEquals(2, count($markers));
 
@@ -93,6 +98,16 @@ class MarkersApiTest extends ApiTester {
 		$this->assertContains($inData1['name'], $actualNames);
 		$this->assertContains($inData2['name'], $actualNames);
 		$this->assertNotContains($outData['name'], $actualNames);
+	}
+
+	public function test_requesting_markers_returns_feature_collection_when_requesting_geojson()
+	{
+		$marker = Marker::create($this->testMarker);
+
+		$response = $this->sendGet('markers', ['format' => 'geojson', 'operator' => 'within', 'shape' => 'box', 'coordinates' => json_encode($this->boundingBoxCoordinates)]);
+		$this->assertResponseStatus(200);
+		$data = $response->getData()->data->data;
+		$this->assertEquals('FeatureCollection', $data->type);
 	}
 
 }

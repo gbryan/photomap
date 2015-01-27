@@ -1,6 +1,8 @@
 <?php
 
 trait TestPhotosTrait {
+
+	private $TEST_LONGITUDE = -122.2749;
 	
 	public function createTestPhoto(array $attributes, $filename = 'test_photo.jpg')
 	{

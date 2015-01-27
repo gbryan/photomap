@@ -14,10 +14,10 @@ class MarkersTest extends BaseTester {
 		$this->assertEquals($this->testMarker, $marker->onlyFields($fields));
 	}
 
-	public function test_creating_marker_fails_when_loc_is_not_provided()
+	public function test_creating_marker_fails_when_geometry_is_not_provided()
 	{
 		$data = $this->testMarker;
-		unset($data['loc']);
+		unset($data['geometry']);
 
 		$marker = new Marker($data);
 

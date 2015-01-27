@@ -3,13 +3,14 @@
 trait TestMarkersTrait {
 	
 	protected $testMarker = [
-		'name'	=> 'City Hall',
-		'loc'	=> [
+		'type'			=> 'Feature',
+		'name'			=> 'City Hall',
+		'description'	=> 'My fancy description',
+		'tags'			=> ['building', 'government'],
+		'geometry'		=> [
 			'type'			=> 'Point',
 			'coordinates'	=> [-122.273257, 37.869230]
-		],
-		'description'	=> 'My fancy description',
-		'tags'	=> ['building', 'government']
+		]
 	];
 
 	protected $boundingBoxCoordinates = [

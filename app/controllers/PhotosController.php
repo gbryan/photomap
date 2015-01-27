@@ -1,5 +1,7 @@
 <?php
 
+use PhotoMap\Pagination\Paginator;
+
 class PhotosController extends \ApiController {
 
 	/**
@@ -41,8 +43,29 @@ class PhotosController extends \ApiController {
 		$filenameWithoutExtension = new MongoId;
 
 		$imageOnDisk = $photo->storeImage(Input::file('photo'), $filenameWithoutExtension);
+		$photo->gleanExifData(Input::file('photo'));
 		$photo->filename = $imageOnDisk->dirname . '/' . $imageOnDisk->filename . '.' . $imageOnDisk->extension;
 		$photo->_id = $filenameWithoutExtension;
+
+		if (Input::get('create_marker', false) && empty($photo->coordinates))
+		{
+			return $this->errorResponse([$photo->_id => 'Marker could not be created because the provided photo has no GPS data.'],
+				'Marker could not be created because the provided photo has no GPS data.');
+		}
+
+		if (Input::get('create_marker', false) && !empty($photo->coordinates))
+		{
+			$marker = Marker::create([
+				'type'			=> 'Feature',
+				'name'			=> $photo->_id,
+				'description'	=> $photo->_id,
+				'geometry'	=> [
+					'type'			=> 'Point',
+					'coordinates'	=> $photo->coordinates
+				]
+			]);
+			$photo->marker_id = $marker->_id;
+		}
 		
 		if (!$photo->save())
 		{
@@ -121,5 +144,15 @@ class PhotosController extends \ApiController {
 		//
 	}
 
+	/**
+	 * Find markers that are not associated with a marker.
+	 * @return Response
+	 */
+	public function noMarker()
+	{
+		return $this->successResponse(
+			Photo::whereNull('marker_id')->paginate()->apiFields(), 
+			'Photos without associated markers');
+	}
 
 }

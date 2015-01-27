@@ -22,6 +22,28 @@ class Paginator extends \Illuminate\Pagination\Paginator {
 	}
 
 	/**
+	 * Format the data as a geoJSON-formatted array.
+	 * @param  boolean $apiFields  Whether the included fields should be limited to those specified by $apiFields on the Model
+	 * @return array
+	 */
+	public function toGeoJson($apiFields = true)
+	{
+		$data = $this->toArray();
+		unset($data['data']);
+
+		if ($apiFields)
+		{
+			$data['data'] = $this->getCollection()->toGeoJson(true);
+		}
+
+		else {
+			$data['data'] = $this->getCollection()->toArray();
+		}
+		
+		return $data;
+	}
+
+	/**
 	 * Get a collection instance containing the items.
 	 *
 	 * @return \PhotoMap\Extensions\Collection

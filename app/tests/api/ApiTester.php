@@ -15,7 +15,7 @@ class ApiTester extends BaseTester {
 
 		if ($login)
 		{
-			$server = ['PHP_AUTH_USER' => 'admin', 'PHP_AUTH_PW' => 'password'];
+			$server = ['PHP_AUTH_USER' => 'bogus@bogus.com', 'PHP_AUTH_PW' => 'password'];
 		}
 
 		return $this->call('POST', '/api/v1.0/' . $endpoint, $parameters, $files, $server);
@@ -27,7 +27,7 @@ class ApiTester extends BaseTester {
 
 		if ($login)
 		{
-			$server = ['PHP_AUTH_USER' => 'admin', 'PHP_AUTH_PW' => 'password'];
+			$server = ['PHP_AUTH_USER' => 'bogus@bogus.com', 'PHP_AUTH_PW' => 'password'];
 		}
 
 		return $this->call('PUT', '/api/v1.0/' . $endpoint, $parameters, [], $server);
@@ -39,7 +39,7 @@ class ApiTester extends BaseTester {
 
 		if ($login)
 		{
-			$server = ['PHP_AUTH_USER' => 'admin', 'PHP_AUTH_PW' => 'password'];
+			$server = ['PHP_AUTH_USER' => 'bogus@bogus.com', 'PHP_AUTH_PW' => 'password'];
 		}
 
 		return $this->call('GET', '/api/v1.0/' . $endpoint, $parameters, [], $server);

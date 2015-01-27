@@ -26,4 +26,32 @@ class Collection extends \Illuminate\Database\Eloquent\Collection {
 			return $item->onlyFields($fields);
 		});
 	}
+
+	/**
+	 * Format the data as a geoJSON-formatted array.
+	 * @param  boolean $apiFields  Whether the included fields should be limited to those specified by $apiFields on the Model
+	 * @return array
+	 */
+	public function toGeoJson($apiFields = true)
+	{
+		$data = array();
+		
+		$data['type'] = 'FeatureCollection';
+
+		if ($apiFields)
+		{
+			$features = $this->map(function($item) use ($apiFields)
+			{
+				return $item->toGeoJson($apiFields);
+			});
+
+			$data['features'] = $features;
+		}
+
+		else {
+			$data['features'] = $this->toArray();
+		}
+		
+		return $data;
+	}
 }

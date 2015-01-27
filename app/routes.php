@@ -13,13 +13,29 @@
 
 Route::get('/', function()
 {
-	return View::make('hello');
+	return View::make('index');
 });
 
 Route::group(['prefix' => 'api/v1.0', 'before' => 'api_auth'], function()
 {
 	Route::resource('markers', 'MarkersController');
+	Route::get('photos/no-marker', 'PhotosController@noMarker');
 	Route::resource('photos', 'PhotosController');
 	Route::post('photos/{id}', 'PhotosController@partialUpdate');
-	Route::resource('files', 'FilesController');
+	Route::resource('files', 'FilesController', ['only' => 'show']);
+});
+
+Route::post('login', function()
+{
+	$email = Input::get('email', 'bogus');
+	$password = Input::get('password', 'bogus');
+
+	$apiController = App::make('ApiController');
+
+	if (Auth::attempt(['email' => $email, 'password' => $password])) {
+
+		return $apiController->successResponse(Auth::user()->toArray(), 'Login successful!');
+	}
+
+	return $apiController->errorResponse(['login' => 'The email or password that you entered is invalid.'], 'Invalid login', 'error', 401);
 });
