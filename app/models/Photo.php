@@ -1,6 +1,10 @@
 <?php
 
+use \PhotoMap\QueryScopes\MultiTenantTrait;
+
 class Photo extends BaseModel {
+
+	use MultiTenantTrait;
 
 	public $singularName = 'photo';
 

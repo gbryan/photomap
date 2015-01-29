@@ -1,6 +1,7 @@
 <?php
 
 use Jenssegers\Mongodb\Model as Eloquent;
+use PhotoMap\Observers\ValidationObserver;
 
 class ValidatingModel extends Eloquent
 {
@@ -16,6 +17,22 @@ class ValidatingModel extends Eloquent
      */
     public $validator;
 
+    /**
+     * Whether to automatically validate attribute values when saving
+     * @var boolean
+     */
+    protected static $validateOnSave = true;
+
+    public static function boot()
+    {
+        parent::boot();
+
+        if (static::$validateOnSave)
+        {
+            static::observe(new ValidationObserver);
+        }
+    }
+    
     /**
      * Validate the model's attributes, given a set of rules.
      * @param  array $values Model values, such as Input::all()

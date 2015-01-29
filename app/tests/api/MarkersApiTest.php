@@ -70,6 +70,8 @@ class MarkersApiTest extends ApiTester {
 
 	public function test_requesting_markers_with_bounding_box()
 	{
+		$this->login();
+
 		$inData1 = $this->testMarker;
 		$inData1['name'] = 'In bounds 1';
 		$inBounds1 = Marker::create($inData1);
@@ -102,6 +104,8 @@ class MarkersApiTest extends ApiTester {
 
 	public function test_requesting_markers_returns_feature_collection_when_requesting_geojson()
 	{
+		$this->login();
+		
 		$marker = Marker::create($this->testMarker);
 
 		$response = $this->sendGet('markers', ['format' => 'geojson', 'operator' => 'within', 'shape' => 'box', 'coordinates' => json_encode($this->boundingBoxCoordinates)]);

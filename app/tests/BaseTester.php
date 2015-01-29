@@ -4,6 +4,10 @@ class BaseTester extends TestCase {
 	
 	protected $usesDb = false;
 
+	protected $enableEvents = true;
+
+	protected $loginFirst = false;
+
 	public function setUp()
 	{
 		parent::setUp();
@@ -13,6 +17,16 @@ class BaseTester extends TestCase {
 			$this->dropTestDatabase();
 			$this->setupTestData();
 		}
+
+		if ($this->enableEvents)
+		{
+			$this->registerModelEvents();
+		}
+
+		if ($this->loginFirst)
+		{
+			$this->login();
+		}
 	}
 
 	public function tearDown()
@@ -21,6 +35,33 @@ class BaseTester extends TestCase {
 
 		$this->deleteTestStorage();
 	}
+
+	protected function login()
+	{
+		$this->be(User::whereEmail('bogus@bogus.com')->first());
+	}
+
+	/**
+	 * Clear existing event listeners and reregister them.
+	 * @return void
+	 */
+    private function registerModelEvents() {
+
+    	$models = [
+    		'Marker',
+    		'Photo'
+    	];
+
+        // Reset each model event listeners.
+        foreach ($models as $model) {
+
+            // Flush existing listeners.
+            call_user_func(array($model, 'flushEventListeners'));
+
+            // Reregister them.
+            call_user_func(array($model, 'boot'));
+        }
+    }
 
 	private function deleteTestStorage()
 	{

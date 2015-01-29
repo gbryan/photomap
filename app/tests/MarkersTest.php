@@ -6,6 +6,8 @@ class MarkersTest extends BaseTester {
 
 	protected $usesDb = true;
 
+	protected $loginFirst = true;
+
 	public function test_create_a_marker_and_ensure_output_matches_input()
 	{
 		$marker = Marker::create($this->testMarker);

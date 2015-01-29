@@ -1,6 +1,26 @@
 <?php
 
+use PhotoMap\Observers\MultiTenantObserver;
+
 class BaseModel extends ValidatingModel {
+
+    public static function boot()
+    {
+        parent::boot();
+
+        if (property_exists(new static, 'supportsMultiTenant') && static::$supportsMultiTenant)
+        {
+            static::observe(new MultiTenantObserver);
+        }
+    }
+	/**
+	 * Get the $tenantIdColumn.
+	 * @return string
+	 */
+	public function getTenantIdColumn()
+	{
+		return $this->tenantIdColumn;
+	}
 
 	/**
 	 * Returns an array of only the specified fields. If a specified field does not exist on the model, it 

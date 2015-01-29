@@ -1,6 +1,10 @@
 <?php
 
+use \PhotoMap\QueryScopes\MultiTenantTrait;
+
 class Marker extends BaseModel {
+
+	use MultiTenantTrait;
 
 	protected $apiFields = [];
 
