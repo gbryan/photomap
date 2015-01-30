@@ -1,10 +1,12 @@
 <?php
 
 use \PhotoMap\QueryScopes\MultiTenantTrait;
+use \PhotoMap\QueryScopes\ProjectFilteringTrait;
 
 class Marker extends BaseModel {
 
 	use MultiTenantTrait;
+	use ProjectFilteringTrait;
 
 	protected $apiFields = [];
 
@@ -21,6 +23,7 @@ class Marker extends BaseModel {
 		'tags',
 		'images',
 		'geometry',
+		'project_id'
 	];
 
 	public $validationRules = [

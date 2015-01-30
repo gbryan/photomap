@@ -3,7 +3,7 @@
 use Jenssegers\Mongodb\Model as Model;
 use \PhotoMap\Helpers;
 
-class MultiTenantObserver {
+class ProjectFilteringObserver {
 	
 	/**
 	 * Fires before model is saved in the database
@@ -12,8 +12,8 @@ class MultiTenantObserver {
 	 */
 	public function saving(Model $model)
 	{
-		$tenantIdColumn = $model->getTenantIdColumn();
-		$model->$tenantIdColumn = Helpers::currentScope('user')->id;
+		$projectIdColumn = $model->getProjectIdColumn();
+		$model->$projectIdColumn = (!empty(Helpers::currentScope('project')) ? Helpers::currentScope('project')->id : null);
 	}
 
 }

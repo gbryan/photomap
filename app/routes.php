@@ -16,7 +16,7 @@ Route::get('/', function()
 	return View::make('index');
 });
 
-Route::group(['prefix' => 'api/v1.0', 'before' => 'api_auth'], function()
+Route::group(['prefix' => 'api/v1.0', 'before' => 'auth.api'], function()
 {
 	Route::resource('markers', 'MarkersController');
 	Route::get('photos/no-marker', 'PhotosController@noMarker');
@@ -38,4 +38,12 @@ Route::post('login', function()
 	}
 
 	return $apiController->errorResponse(['login' => 'The email or password that you entered is invalid.'], 'Invalid login', 'error', 401);
+});
+
+Route::get('logout', function()
+{
+	if (!Auth::guest())
+	{
+		Auth::logout();
+	}
 });

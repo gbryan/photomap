@@ -38,7 +38,9 @@ class BaseTester extends TestCase {
 
 	protected function login()
 	{
-		$this->be(User::whereEmail('bogus@bogus.com')->first());
+		$user = User::whereEmail('bogus@bogus.com')->first();
+		$this->be($user);
+		\PhotoMap\Helpers::setCurrentScope('user', $user);
 	}
 
 	/**
@@ -49,7 +51,8 @@ class BaseTester extends TestCase {
 
     	$models = [
     		'Marker',
-    		'Photo'
+    		'Photo',
+    		'Project'
     	];
 
         // Reset each model event listeners.

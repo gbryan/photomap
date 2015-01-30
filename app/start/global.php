@@ -88,3 +88,12 @@ App::down(function()
 
 require app_path().'/filters.php';
 require app_path().'/validators.php';
+
+App::singleton('currentScopes', function($app)
+{
+	$currentScopes = new StdClass;
+	$currentScopes->user = null;
+	$currentScopes->project = null;
+
+    return $currentScopes;
+});

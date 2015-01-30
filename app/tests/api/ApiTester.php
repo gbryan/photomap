@@ -16,6 +16,8 @@ class ApiTester extends BaseTester {
 		if ($login)
 		{
 			$server = ['PHP_AUTH_USER' => 'bogus@bogus.com', 'PHP_AUTH_PW' => 'password'];
+			$user = User::whereEmail('bogus@bogus.com')->first();
+			\PhotoMap\Helpers::setCurrentScope('user', $user);
 		}
 
 		return $this->call('POST', '/api/v1.0/' . $endpoint, $parameters, $files, $server);
@@ -28,6 +30,8 @@ class ApiTester extends BaseTester {
 		if ($login)
 		{
 			$server = ['PHP_AUTH_USER' => 'bogus@bogus.com', 'PHP_AUTH_PW' => 'password'];
+			$user = User::whereEmail('bogus@bogus.com')->first();
+			\PhotoMap\Helpers::setCurrentScope('user', $user);
 		}
 
 		return $this->call('PUT', '/api/v1.0/' . $endpoint, $parameters, [], $server);
@@ -40,6 +44,8 @@ class ApiTester extends BaseTester {
 		if ($login)
 		{
 			$server = ['PHP_AUTH_USER' => 'bogus@bogus.com', 'PHP_AUTH_PW' => 'password'];
+			$user = User::whereEmail('bogus@bogus.com')->first();
+			\PhotoMap\Helpers::setCurrentScope('user', $user);
 		}
 
 		return $this->call('GET', '/api/v1.0/' . $endpoint, $parameters, [], $server);
@@ -52,4 +58,5 @@ class ApiTester extends BaseTester {
 		$responseData = $response->getData();
 		$this->assertEquals('success', $responseData->status);
 	}
+
 }

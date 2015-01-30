@@ -34,4 +34,13 @@ trait MultiTenantTrait {
         return (new static)->newQueryWithoutScope(new MultiTenantScope);
     }
 
+    /**
+     * Get the $tenantIdColumn.
+     * @return string
+     */
+    public function getTenantIdColumn()
+    {
+        return $this->tenantIdColumn;
+    }
+
 }

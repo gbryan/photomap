@@ -1,6 +1,7 @@
 <?php
 
 use PhotoMap\Observers\MultiTenantObserver;
+use PhotoMap\Observers\ProjectFilteringObserver;
 
 class BaseModel extends ValidatingModel {
 
@@ -12,15 +13,12 @@ class BaseModel extends ValidatingModel {
         {
             static::observe(new MultiTenantObserver);
         }
+
+        if (property_exists(new static, 'supportsProjectFiltering') && static::$supportsProjectFiltering)
+        {
+            static::observe(new ProjectFilteringObserver);
+        }
     }
-	/**
-	 * Get the $tenantIdColumn.
-	 * @return string
-	 */
-	public function getTenantIdColumn()
-	{
-		return $this->tenantIdColumn;
-	}
 
 	/**
 	 * Returns an array of only the specified fields. If a specified field does not exist on the model, it 

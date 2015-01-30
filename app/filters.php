@@ -33,20 +33,20 @@ App::after(function($request, $response)
 |
 */
 
-Route::filter('auth', function()
-{
-	if (Auth::guest())
-	{
-		if (Request::ajax())
-		{
-			return Response::make('Unauthorized', 401);
-		}
-		else
-		{
-			return Redirect::guest('login');
-		}
-	}
-});
+// Route::filter('auth', function()
+// {
+// 	if (Auth::guest())
+// 	{
+// 		if (Request::ajax())
+// 		{
+// 			return Response::make('Unauthorized', 401);
+// 		}
+// 		else
+// 		{
+// 			return Redirect::guest('login');
+// 		}
+// 	}
+// });
 
 
 Route::filter('auth.basic', function()
@@ -54,12 +54,14 @@ Route::filter('auth.basic', function()
 	return Auth::basic();
 });
 
-Route::filter('api_auth', function()
+Route::filter('auth.api', function()
 {
 	if (Auth::guest())
 	{
 		return Auth::basic();
 	}
+
+	\PhotoMap\Helpers::setCurrentScope('user', Auth::user());
 });
 
 /*

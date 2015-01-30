@@ -1,10 +1,12 @@
 <?php
 
 use \PhotoMap\QueryScopes\MultiTenantTrait;
+use \PhotoMap\QueryScopes\ProjectFilteringTrait;
 
 class Photo extends BaseModel {
 
 	use MultiTenantTrait;
+	use ProjectFilteringTrait;
 
 	public $singularName = 'photo';
 
@@ -18,7 +20,8 @@ class Photo extends BaseModel {
 		'title',
 		'description',
 		'date_taken',
-		'marker_id'
+		'marker_id',
+		'project_id'
 	];
 
 	protected $apiFields = [
